@@ -1,7 +1,10 @@
 # MitoGraph-smallFISH-and-Python-Spatial-Analysis
 
-This was a large part of my thesis, submitted in partial fulfillment of the requirements for the Degree of Master of Science in the Graduate Program of Biotechnology at Brown University. This project aimed to solve the problem of large-scale single-cell analysis of _S. cerevisiae_ in an efficient and reproducible manner. It combines Small Fish (https://github.com/EBL-IGH/small_fish_gui) for smFISH Image spot detection and quantification, and MitoGraph (https://github.com/vianamp/MitoGraph), for a fully automated image processing method and software dedicated to calculating the three-dimensional morphology of mitochondria. These methods were then combined with custom Python scripts based on previous lab members' work. With the assistance of ChatGPT Codex (https://learn.chatgpt.com/docs), a semi-automated workflow was created to subtract image background when needed reliably, converts raw z-stacks into single-cell images, runs MitoGraph and smallFISH, extracts raw smallFISH RNA intensity distributions, converts mRNA spot coordinates into microns, computes real mRNA nearest-neighbor distributions, checks mRNA-mRNA colocalization cell-by-cell, measures optional mRNA-to-mitochondrial-surface proximity, builds random mitochondrial-proximity null models, compares real versus random distributions, and finally summarizes strain/probe effects across experimental conditions. 
+This was a large part of my thesis work under [Dr. Weihan Li]([url](https://www.weihan-li.com/)), submitted in partial fulfillment of the requirements for the **Degree of Master of Science in the Graduate Program of Biotechnology at Brown University**. 
 
+This project aimed to solve the problem of large-scale single-cell analysis of _S. cerevisiae_ in an efficient and reproducible manner. It combines [Small Fish]([url](https://github.com/EBL-IGH/small_fish_gui)) for smFISH Image spot detection and quantification, and [MitoGraph]([url](https://github.com/vianamp/MitoGraph)), for a fully automated image processing method and software dedicated to calculating the three-dimensional morphology of mitochondria. These methods were then combined with custom Python scripts based on previous lab members' work. With the assistance of [ChatGPT Codex]([url](https://learn.chatgpt.com/docs)), a semi-automated workflow was created to reliably subtract image background when needed, convert raw z-stacks into single-cell images, run MitoGraph and smallFISH, extract raw smallFISH RNA intensity distributions, convert mRNA spot coordinates into microns, compute real mRNA nearest-neighbor distributions, check mRNA-mRNA colocalization cell-by-cell, measure optional mRNA-to-mitochondrial-surface proximity, builds random mitochondrial-proximity null models, compares real versus random distributions, and finally summarizes strain/probe effects across experimental conditions. 
+
+[Example Data Set ]([url](https://drive.google.com/drive/folders/1GKXuFGcioTF_7YcUi1d277WfLsQV1za7?usp=sharing))
 
 <img width="960" height="672" alt="Thesis Figures (5)" src="https://github.com/user-attachments/assets/a4dfb96e-127d-4900-9106-ae0ecb79c19a" />
 
@@ -20,3 +23,9 @@ Example of the imaging and computational analysis workflow applied to a single S
 **Example WT pooled real and randomized nearest-neighbor distance distributions.**
 
 Pooled nearest-neighbor distance distributions are shown for ATP6/8, ATP2, ATP3, and TIM50 in the WT yWL333 background. Filled histograms represent real detected mRNA nearest-neighbor distances, while blue outline histograms represent matched randomized mRNA distributions. Dashed vertical lines indicate the median distance for each distribution, and Δ median indicates the real-minus-random median shift shown in each plot. Distances below 0.20 µm were floored to 0.20 µm to avoid overinterpreting sub-diffraction-scale distances. 
+
+## Action Items/Limitations: 
+- Image quality needs to be quite high, and image improvements like deconvolution have not been explored extensively enough. 
+- Selection of good cells for downstream analysis requires a lot of manual input, especially needing to select a statistically significant number of cells (>100). An ambitious project would remedy this with an automated single-cell selection.
+-  
+
