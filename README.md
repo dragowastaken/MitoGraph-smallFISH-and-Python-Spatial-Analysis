@@ -4,7 +4,7 @@ This was a large part of my thesis work under [Dr. Weihan Li](https://www.weihan
 
 This project aimed to solve the problem of large-scale single-cell analysis of _S. cerevisiae_ in an efficient and reproducible manner. It combines [Small Fish](https://github.com/EBL-IGH/small_fish_gui) for smFISH Image spot detection and quantification, and [MitoGraph](https://github.com/vianamp/MitoGraph) for a fully automated image processing method and software dedicated to calculating the three-dimensional morphology of mitochondria. These methods were then combined with custom Python scripts based on previous lab members' work. With the assistance of [ChatGPT Codex](https://learn.chatgpt.com/docs), a semi-automated workflow was created to reliably subtract image background when needed, convert raw z-stacks into single-cell images, run MitoGraph and smallFISH, extract raw smallFISH RNA intensity distributions, convert mRNA spot coordinates into microns, compute real mRNA nearest-neighbor distributions, check mRNA-mRNA colocalization cell-by-cell, measure optional mRNA-to-mitochondrial-surface proximity, builds random mitochondrial-proximity null models, compares real versus random distributions, and finally summarizes strain/probe effects across experimental conditions. 
 
-## [Example Data Set ](https://drive.google.com/drive/folders/1GKXuFGcioTF_7YcUi1d277WfLsQV1za7?usp=sharing)
+## Workflow and Important Outputs
 
 <img width="960" height="672" alt="Thesis Figures (5)" src="https://github.com/user-attachments/assets/a4dfb96e-127d-4900-9106-ae0ecb79c19a" />
 
@@ -27,3 +27,5 @@ Pooled nearest-neighbor distance distributions are shown for ATP6/8, ATP2, ATP3,
 ## Action Items/Limitations: 
 - Image quality needs to be quite high, and image improvements like deconvolution have not been explored extensively enough. 
 - Selection of good cells for downstream analysis requires a lot of manual input, especially needing to select a statistically significant number of cells (>100). An ambitious project would remedy this with an automated single-cell selection.
+
+## [Example Data Set ](https://drive.google.com/drive/folders/1GKXuFGcioTF_7YcUi1d277WfLsQV1za7?usp=sharing)
