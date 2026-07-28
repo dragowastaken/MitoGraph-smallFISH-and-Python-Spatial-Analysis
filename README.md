@@ -20,7 +20,7 @@ Schematic overview of the image-analysis pipeline used to quantify RNA localizat
 
 ### **Representative smFISH image processing and three-dimensional RNA-mitochondria reconstruction.**
 
-Example of the imaging and computational analysis workflow applied to a single S. cerevisiae cell. Representative fluorescence images showing ATP6/8 mRNA, TIM50 mRNA, and mito-GFP-labeled mitochondria from the same cell. RNA signals appear as puncta, while the mitochondrial signal outlines the mitochondrial network. Scale bars, 5 µm. Three-dimensional reconstruction of that same cell showing ATP6/8 mRNA (magenta), TIM50 mRNA (green), and mitochondrial skeleton(grey) in a shared coordinate space. This reconstruction provides the basis for quantitative distance-based analysis of RNA organization relative to mitochondria. Check out my [3D Cell Model](./3D Cell Model.html).
+Example of the imaging and computational analysis workflow applied to a single S. cerevisiae cell. Representative fluorescence images showing ATP6/8 mRNA, TIM50 mRNA, and mito-GFP-labeled mitochondria from the same cell. RNA signals appear as puncta, while the mitochondrial signal outlines the mitochondrial network. Scale bars, 5 µm. Three-dimensional reconstruction of that same cell showing ATP6/8 mRNA (magenta), TIM50 mRNA (green), and mitochondrial skeleton(grey) in a shared coordinate space. This reconstruction provides the basis for quantitative distance-based analysis of RNA organization relative to mitochondria. Check out an example of [3D Cell Model](./cell_002_GLOBAL_CALIBRATION_surface_overlay.html).
 
 <img width="960" height="672" alt="Thesis Figures (7)" src="https://github.com/user-attachments/assets/448b270b-ca0c-4361-bbbe-346a7fdb001e" />
 
