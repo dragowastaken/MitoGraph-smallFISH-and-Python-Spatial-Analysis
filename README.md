@@ -1,8 +1,12 @@
-# MitoGraph-smallFISH-and-Python-Spatial-Analysis
+# MitoGraph-SmallFISH-and-Python-Spatial-Analysis
 
-This was a large part of my thesis work under [Dr. Weihan Li](https://www.weihan-li.com/), submitted in partial fulfillment of the requirements for the **Degree of Master of Science in the Graduate Program of Biotechnology at Brown University**. 
+This repository contains a semi-automated image-analysis workflow developed as part of my thesis work under [Dr. Weihan Li](https://www.weihan-li.com/), submitted in partial fulfillment of the requirements for the **Degree of Master of Science in the Graduate Program of Biotechnology at Brown University**. 
 
-This project aimed to solve the problem of large-scale single-cell analysis of _S. cerevisiae_ in an efficient and reproducible manner. It combines [Small Fish](https://github.com/EBL-IGH/small_fish_gui) for smFISH Image spot detection and quantification, and [MitoGraph](https://github.com/vianamp/MitoGraph) for a fully automated image processing method and software dedicated to calculating the three-dimensional morphology of mitochondria. These methods were then combined with custom Python scripts based on previous lab members' work. With the assistance of [ChatGPT Codex](https://learn.chatgpt.com/docs), a semi-automated workflow was created to reliably subtract image background when needed, convert raw z-stacks into single-cell images, run MitoGraph and smallFISH, extract raw smallFISH RNA intensity distributions, convert mRNA spot coordinates into microns, compute real mRNA nearest-neighbor distributions, check mRNA-mRNA colocalization cell-by-cell, measure optional mRNA-to-mitochondrial-surface proximity, builds random mitochondrial-proximity null models, compares real versus random distributions, and finally summarizes strain/probe effects across experimental conditions. 
+The project was designed to support reproducible, large-scale, single-cell spatial analysis of _Saccharomyces cerevisiae_. It combines [Small Fish](https://github.com/EBL-IGH/small_fish_gui) for smFISH RNA spot detection and quantification with [MitoGraph](https://github.com/vianamp/MitoGraph) for three-dimensional mitochondrial network reconstruction. These outputs are then integrated using custom Python scripts to quantify RNA localization relative to mitochondria across cells, imaging series, probe sets, and experimental conditions.
+
+The workflow can be used to subtract image background when needed, crop raw z-stacks into single-cell images, run MitoGraph and smallFISH, extract RNA intensity distributions, convert mRNA spot coordinates into microns, calculate real mRNA nearest-neighbor distances, test mRNA-mRNA colocalization, measure mRNA-to-mitochondrial-surface proximity, generate randomized mitochondrial-proximity null models, compare real and randomized spatial distributions, and summarize strain/probe effects across experimental conditions.
+
+This repository is intended as both a reproducible analysis pipeline and a practical handoff guide for future users in the Li Lab who want to analyze RNA-mitochondria spatial organization from microscopy data.
 
 ## Workflow and Important Outputs
 
@@ -10,7 +14,7 @@ This project aimed to solve the problem of large-scale single-cell analysis of _
 
 ### **Computational workflow for single-cell RNA-mitochondria spatial analysis**
 
-Schematic overview of the image-analysis pipeline used to quantify RNA localization relative to the mitochondrial network. (A) From larger microscopy fields, individual cells were manually selected and cropped so that each cell could be analyzed independently. (B) Cropped cells were separated into individual fluorescence channels for mRNA and mitochondria. RNA puncta coordinates were detected using smallFISH, while mitochondrial morphology was processed using MitoGraph to reconstruct the mitochondrial skeleton. (C) Detected mRNA and mitochondrial skeleton coordinates were converted into a common three-dimensional coordinate system for quantitative analysis. The final output enables comparison of mRNA puncta positions, mitochondrial network morphology, and spatial relationships between RNA species and mitochondria. Scale bars, 5 µm.
+Schematic overview of the image-analysis pipeline used to quantify RNA localization relative to the mitochondrial network. (A) From larger microscopy fields, individual cells were manually selected and cropped so that each cell could be analyzed independently. (B) Cropped cells were separated into individual fluorescence channels for mRNA and mitochondria. RNA puncta coordinates were detected using SmallFISH, while mitochondrial morphology was processed using MitoGraph to reconstruct the mitochondrial skeleton. (C) Detected mRNA and mitochondrial skeleton coordinates were converted into a common three-dimensional coordinate system for quantitative analysis. The final output enables comparison of mRNA puncta positions, mitochondrial network morphology, and spatial relationships between RNA species and mitochondria. Scale bars, 5 µm.
 
 <img width="960" height="672" alt="Thesis Figures (6)" src="https://github.com/user-attachments/assets/8e82a7c0-c3a2-4d54-80f6-f6dd81dced00" />
 
@@ -24,8 +28,18 @@ Example of the imaging and computational analysis workflow applied to a single S
 
 Pooled nearest-neighbor distance distributions are shown for ATP6/8, ATP2, ATP3, and TIM50 in the WT yWL333 background. Filled histograms represent real detected mRNA nearest-neighbor distances, while blue outline histograms represent matched randomized mRNA distributions. Dashed vertical lines indicate the median distance for each distribution, and Δ median indicates the real-minus-random median shift shown in each plot. Distances below 0.20 µm were floored to 0.20 µm to avoid overinterpreting sub-diffraction-scale distances. 
 
-## Action Items/Limitations: 
-- Image quality needs to be quite high, and image improvements like deconvolution have not been explored extensively enough. 
-- Selection of good cells for downstream analysis requires a lot of manual input, especially needing to select a statistically significant number of cells (>100). An ambitious project would remedy this with an automated single-cell selection.
+## Limitations and Future Work: 
+- Image quality must be high for reliable downstream analysis. Additional image-improvement methods, such as deconvolution, have not yet been explored extensively.
+- Selection of high-quality single cells currently requires substantial manual input, especially when analyzing statistically meaningful sample sizes of more than 100 cells. A useful future extension would be automated single-cell detection, filtering, and cropping.
 
 ## [Example Data Set ](https://drive.google.com/drive/folders/1GKXuFGcioTF_7YcUi1d277WfLsQV1za7?usp=sharing)
+
+## Acknowledgments
+
+This project was completed as part of my thesis work in the Li Lab at Brown University. I am especially grateful to my advisor, [Dr. Weihan Li](https://www.weihan-li.com/), for his guidance, mentorship, and support throughout the development of this project.
+
+I am particularly grateful to Dubuke Ma, whose foundational code helped support the computational analysis pipeline.
+
+This workflow also benefited from AI-assisted coding and documentation support. [ChatGPT Codex](https://learn.chatgpt.com/docs) was used as a development assistant to help accelerate script writing, debugging, documentation, and organization of the analysis pipeline. All analysis goals, biological interpretation, workflow decisions, and final implementation choices were directed and reviewed by the author.
+
+This work was supported by the NIH Common Fund, grant R00GM148788. Figures included were created with [BioRender](https://www.biorender.com/).
