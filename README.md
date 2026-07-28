@@ -26,7 +26,7 @@ Example of the imaging and computational analysis workflow applied to a single S
 
 ### **Example WT pooled real and randomized nearest-neighbor distance distributions.**
 
-Pooled nearest-neighbor distance distributions are shown for ATP6/8, ATP2, ATP3, and TIM50 in the WT yWL333 background. Filled histograms represent real detected mRNA nearest-neighbor distances, while blue outline histograms represent matched randomized mRNA distributions. Dashed vertical lines indicate the median distance for each distribution, and Δ median indicates the real-minus-random median shift shown in each plot. Distances below 0.20 µm were floored to 0.20 µm to avoid overinterpreting sub-diffraction-scale distances. 
+Pooled nearest-neighbor distance distributions are shown for ATP6/8, ATP2, ATP3, and TIM50 in the WT background. Filled histograms represent real detected mRNA nearest-neighbor distances, while blue outline histograms represent matched randomized mRNA distributions. Dashed vertical lines indicate the median distance for each distribution, and Δ median indicates the real-minus-random median shift shown in each plot. Distances below 0.20 µm were floored to 0.20 µm to avoid overinterpreting sub-diffraction-scale distances. 
 
 ## Limitations and Future Work: 
 - Image quality must be high for reliable downstream analysis. Additional image-improvement methods, such as deconvolution, have not yet been explored extensively.
