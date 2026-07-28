@@ -43,3 +43,6 @@ I am particularly grateful to Dubuke Ma, whose foundational code helped support 
 This workflow also benefited from AI-assisted coding and documentation support. [ChatGPT Codex](https://learn.chatgpt.com/docs) was used as a development assistant to help accelerate script writing, debugging, documentation, and organization of the analysis pipeline. All analysis goals, biological interpretation, workflow decisions, and final implementation choices were directed and reviewed by the author.
 
 This work was supported by the NIH Common Fund, grant R00GM148788. Figures included were created with [BioRender](https://www.biorender.com/).
+
+<img width="82" height="20" alt="image" src="https://github.com/user-attachments/assets/11749e98-2c49-4788-bfda-055d39ee4c28" />
+
