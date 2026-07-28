@@ -6,7 +6,7 @@ The project was designed to support reproducible, large-scale, single-cell spati
 
 The workflow can be used to subtract image background when needed, crop raw z-stacks into single-cell images, run MitoGraph and smallFISH, extract RNA intensity distributions, convert mRNA spot coordinates into microns, calculate real mRNA nearest-neighbor distances, test mRNA-mRNA colocalization, measure mRNA-to-mitochondrial-surface proximity, generate randomized mitochondrial-proximity null models, compare real and randomized spatial distributions, and summarize strain/probe effects across experimental conditions.
 
-This repository is intended as both a reproducible analysis pipeline and a practical handoff guide for future users in the Li Lab who want to analyze RNA-mitochondria spatial organization from microscopy data.
+This repository is intended as both a reproducible analysis pipeline and a practical handoff guide for future users in the Li Lab who want to analyze the spatial organization of RNA in mitochondria from microscopy data.
 
 ## Workflow and Important Outputs
 
