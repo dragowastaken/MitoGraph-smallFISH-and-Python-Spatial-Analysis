@@ -8,21 +8,20 @@ The workflow can be used to subtract image background when needed, crop raw z-st
 
 This repository is intended as both a reproducible analysis pipeline and a practical handoff guide for future users in the Li Lab, as well as others who want to analyze the spatial organization of RNA in mitochondria using microscopy data. A full procedure guide is listed [here](./MitoGraph_smallFISH_Procedure_724.md).
 
-## Workflow and Important Outputs
+## Workflow and Important Outputs (Images removed until future publication) 
 
-<img width="960" height="672" alt="Thesis Figures (5)" src="https://github.com/user-attachments/assets/a4dfb96e-127d-4900-9106-ae0ecb79c19a" />
+
 
 ### **Computational workflow for single-cell RNA-mitochondria spatial analysis**
 
 Schematic overview of the image-analysis pipeline used to quantify RNA localization relative to the mitochondrial network. (A) From larger microscopy fields, individual cells were manually selected and cropped so that each cell could be analyzed independently. (B) Cropped cells were separated into individual fluorescence channels for mRNA and mitochondria. RNA puncta coordinates were detected using SmallFISH, while mitochondrial morphology was processed using MitoGraph to reconstruct the mitochondrial skeleton. (C) Detected mRNA and mitochondrial skeleton coordinates were converted into a common three-dimensional coordinate system for quantitative analysis. The final output enables comparison of mRNA puncta positions, mitochondrial network morphology, and spatial relationships between RNA species and mitochondria. Scale bars, 5 µm.
 
-<img width="960" height="672" alt="Thesis Figures (6)" src="https://github.com/user-attachments/assets/8e82a7c0-c3a2-4d54-80f6-f6dd81dced00" />
+
 
 ### **Representative smFISH image processing and three-dimensional RNA-mitochondria reconstruction.**
 
 Example of the imaging and computational analysis workflow applied to a single S. cerevisiae cell. Representative fluorescence images showing ATP6/8 mRNA, TIM50 mRNA, and mito-GFP-labeled mitochondria from the same cell. RNA signals appear as puncta, while the mitochondrial signal outlines the mitochondrial network. Scale bars, 5 µm. Three-dimensional reconstruction of that same cell showing ATP6/8 mRNA (magenta), TIM50 mRNA (green), and mitochondrial skeleton(grey) in a shared coordinate space. This reconstruction provides the basis for quantitative distance-based analysis of RNA organization relative to mitochondria. Check out an example of [3D Cell Model](./cell_002_GLOBAL_CALIBRATION_surface_overlay.html).
 
-<img width="960" height="672" alt="Thesis Figures (7)" src="https://github.com/user-attachments/assets/448b270b-ca0c-4361-bbbe-346a7fdb001e" />
 
 ### **Example WT pooled real and randomized nearest-neighbor distance distributions.**
 
