@@ -1,6 +1,6 @@
 # MitoGraph, smallFISH, and Python Spatial-Analysis Procedure
 
-**Purpose of this document:** this is a folder-level handoff guide for the full Li Lab image-analysis workflow. A new user should be able to open an experiment folder, understand what was run, identify the important inputs and outputs, and trace how each script feeds the next step.
+**Purpose of this document:** This is a folder-level handoff guide for the full Li Lab image-analysis workflow. A new user should be able to open an experiment folder, understand what was run, identify the important inputs and outputs, and trace how each script feeds the next step.
 
 The workflow subtracts image background when needed, converts raw z-stacks into single-cell images, runs MitoGraph and smallFISH, extracts raw smallFISH RNA intensity distributions, converts mRNA spot coordinates into microns, computes real mRNA nearest-neighbor distributions, checks mRNA-mRNA colocalization cell-by-cell, measures optional mRNA-to-mitochondrial-surface proximity, builds random mitochondrial-proximity null models, compares real versus random distributions, and finally summarizes strain/probe effects across experimental conditions.
 
@@ -290,7 +290,7 @@ For the standard workflow, keep the default `30` radius and `Process stack slice
 
 ### Output
 
-There is no separate output folder. The macro saves the processed TIFF back to the same path and overwrites the original file.
+There is no separate output folder. The macro saves the processed TIFF to the same path, overwriting the original file.
 
 Example:
 
@@ -304,7 +304,7 @@ Series 4/raw_image.tif    same filename, background-subtracted image
 
 ### Why this matters downstream
 
-Diffuse background can make smallFISH and MitoGraph detect structures that are not true RNA puncta or mitochondrial signal. Background subtraction reduces this background contribution before:
+Diffuse background can cause smallFISH and MitoGraph to detect structures that are not true RNA puncta or mitochondrial signals. Background subtraction reduces this background contribution before:
 
 - `MaxProjs.tif` creation,
 - ROI cropping,
@@ -346,7 +346,8 @@ The macro skips files already named `MaxProjs.tif` or `MaxProjs.tiff`.
 
 ### What the output is used for
 
-`MaxProjs.tif` is used for visual inspection and ROI drawing before cropping individual cells. It should be saved alongside `RoiSet.zip` before running the crop macro.
+`MaxProjs.tif` is used for visual inspection and ROI drawing before cropping individual cells. 
+To draw ROI's, use the ROI manager in Fiji with the rectangle tool to select single cells and add them to the ROI manager, then save it to the parent folder. It should be saved alongside `RoiSet.zip` before running the crop macro.
 
 ---
 
@@ -361,7 +362,7 @@ MaxProjs.tif
 RoiSet.zip
 ```
 
-It then crops each ROI from the matching raw z-stack image to create individual single-cell TIFF stacks. *All downstream analysis assume that the pixels are set to 200x200*
+It then crops each ROI from the matching raw z-stack image to create individual single-cell TIFF stacks. *All downstream analysis assumes that the pixels are set to 200x200*
 
 ### Input
 
@@ -432,7 +433,7 @@ Series XX/cells/Hyperstacks_Grayscale/*.tif
 You enter:
 
 - channel number or numbers to extract,
-- a descriptive output-folder name for each selected channel.
+- a descriptive output folder name for each selected channel.
 
 Example channel folder names:
 
@@ -457,13 +458,13 @@ Series XX/cells/Hyperstacks_Grayscale/<ChannelName>/<original_filename>.tif
 - mRNA channel images are used for smallFISH.
 
 ### Notes
-Move the extracted channel folders back to the originial series folder, if done correctly it should ask to replace X files click yes replace (this gets rid of the useless stacks produced by mitograph). The final file structore should be: 
+**Move the extracted channel folders back to the original series folder**; if done correctly, it should ask to replace X files; click yes to replace (this gets rid of the useless stacks produced by MitoGraph). The final file structure should be: 
 
 Condition parent folder/
 ├── Series 4/
 │   ├── MaxProjs.tif
 │   ├── RoiSet.zip
-│   ├── cells
+│   ├── cells (The Mito channel only)
 │   │    ├── Hyperstacks_Grayscale/
 │   ├── MS2
 │   └── ATP2/ ATP3/ or TIM50/
@@ -476,7 +477,7 @@ Condition parent folder/
 
 ### Preparation
 Go to parent folder --> series X --> cells --> Hyperstacks_Grayscale --> Extracted Channels 
-Select "cells" "MS2" "ATP2" folders and cut and paste them into "series X" layer to overwrite the previous cropped un-splitted images
+Select the "cells" "MS2" "ATP2" folders and cut and paste them into the "series X" layer to overwrite the previous cropped, unsplit images
 Now, the "cells" folder is ready for mitograph recognition
 
 ### Purpose
@@ -525,7 +526,7 @@ width_(um)
 ```
 
 The `*_nodes.vtk` files are used by the optional node-distance scripts.
-User can also visualize mito skeleton and mito surface by dragging the nodes.vtk skeleton.vtk and mitosurface.vtk files into Paraview.exe
+The user can also visualize the mito skeleton and mito surface by dragging the nodes.vtk skeleton.vtk and mitosurface.vtk files into Paraview.exe
 
 ### QC recommendation
 
@@ -535,7 +536,7 @@ Run the MitoGraph visualization script before using MitoGraph outputs for random
 
 # PART C — smallFISH
 
-smallFISH installation guide : https://pypi.org/project/small-fish-gui/
+smallFISH installation guide: https://pypi.org/project/small-fish-gui/
 
 ## 10. Running smallFISH
 
@@ -1153,7 +1154,7 @@ Use this file when you need the exact identities and distances of overlapping pu
 
 | File | Meaning |
 |---|---|
-| `ALL_unmatched_or_failed_cells.xlsx` | Cells where one channel was missing or a file failed to read. Ideally this is empty or explainable. |
+| `ALL_unmatched_or_failed_cells.xlsx` | Cells where one channel was missing or a file failed to read. Ideally, this is empty or explainable. |
 | `ALL_duplicate_coordinate_files.xlsx` | Duplicate coordinate files for the same Series/mRNA/cell. Check this if outputs look duplicated. |
 | `ALL_input_coordinate_file_index.xlsx` | Every coordinate file found and how it was assigned to Series, mRNA, and cell index. |
 | `RUN_SETTINGS.xlsx` | Exact settings used for reproducibility. |
