@@ -55,6 +55,25 @@ MAX_REJECTION_ATTEMPTS_PER_POINT = 10000
 RANDOM_SEED = None  # Set to an integer for reproducible random points.
 
 # ==========================================================
+# Downstream compatibility settings
+# ==========================================================
+# Script 8 and later pooled-analysis scripts expect the standard random-null
+# output structure:
+#
+#   spots_extraction/
+#   └── random_<mRNA>_output/
+#       └── random_<mRNA>_nn.npy
+#
+# The distance-range version still writes distance-tagged outputs for
+# traceability, but this setting also writes a standard alias so downstream
+# scripts can run without modification.
+WRITE_DOWNSTREAM_COMPATIBILITY_OUTPUTS = True
+
+# If True, per-cell random coordinate CSVs are also copied into the standard
+# downstream folder using names like cell_000_random_MS2.csv.
+WRITE_DOWNSTREAM_COMPATIBILITY_COORDINATES = True
+
+# ==========================================================
 # Plot settings
 # ==========================================================
 HIST_BINS = 50
@@ -630,12 +649,108 @@ def generate_random_points_near_skeleton(
     return np.array(generated, dtype=float)
 
 
+
+def write_downstream_compatibility_outputs(
+    out_folder_compat,
+    mrna,
+    all_nn,
+    per_cell_summary,
+    distance_tag,
+    tagged_npy_path,
+    tagged_csv_path,
+    tagged_per_cell_summary_path,
+    tagged_plot_path,
+    has_plot,
+):
+    """
+    Write standard random-null output names expected by script 8 and later scripts.
+
+    Standard downstream-compatible outputs:
+      random_<mRNA>_output/random_<mRNA>_nn.npy
+      random_<mRNA>_output/random_<mRNA>_nn.csv
+      random_<mRNA>_output/random_<mRNA>_distribution.png
+      random_<mRNA>_output/random_<mRNA>_per_cell_summary.csv
+      random_<mRNA>_output/random_<mRNA>_RUN_SETTINGS.csv
+
+    The standard files are aliases for the active distance-range run. If the
+    script is rerun with a different distance range, these standard outputs are
+    overwritten to point downstream analysis at the newest active null model.
+    """
+    out_folder_compat = Path(out_folder_compat)
+    out_folder_compat.mkdir(parents=True, exist_ok=True)
+
+    compat_npy_path = out_folder_compat / f"random_{mrna}_nn.npy"
+    compat_csv_path = out_folder_compat / f"random_{mrna}_nn.csv"
+    compat_per_cell_summary_path = out_folder_compat / f"random_{mrna}_per_cell_summary.csv"
+    compat_settings_path = out_folder_compat / f"random_{mrna}_RUN_SETTINGS.csv"
+
+    np.save(compat_npy_path, all_nn)
+
+    pd.DataFrame(all_nn, columns=[f"NN_{mrna}_distance"]).to_csv(
+        compat_csv_path, index=False
+    )
+
+    pd.DataFrame(per_cell_summary).to_csv(
+        compat_per_cell_summary_path, index=False
+    )
+
+    settings_df = pd.DataFrame(
+        [
+            {
+                "mRNA": mrna,
+                "compatibility_output_for_downstream_scripts": True,
+                "distance_tag": distance_tag,
+                "distance_min_um": MIN_DISTANCE_UM,
+                "distance_max_um": MAX_DISTANCE_UM,
+                "enforce_nearest_skeleton_range": ENFORCE_NEAREST_SKELETON_RANGE,
+                "nearest_range_tolerance_um": NEAREST_RANGE_TOLERANCE_UM,
+                "max_rejection_attempts_per_point": MAX_REJECTION_ATTEMPTS_PER_POINT,
+                "random_seed": RANDOM_SEED,
+                "tagged_npy_path": str(tagged_npy_path),
+                "tagged_csv_path": str(tagged_csv_path),
+                "tagged_per_cell_summary_path": str(tagged_per_cell_summary_path),
+                "tagged_plot_path": str(tagged_plot_path) if has_plot else "",
+                "compat_npy_path": str(compat_npy_path),
+                "compat_csv_path": str(compat_csv_path),
+                "compat_per_cell_summary_path": str(compat_per_cell_summary_path),
+            }
+        ]
+    )
+    settings_df.to_csv(compat_settings_path, index=False)
+
+    compat_plot_path = ""
+
+    if has_plot and Path(tagged_plot_path).exists():
+        compat_plot_path = out_folder_compat / f"random_{mrna}_distribution.png"
+        try:
+            import shutil
+            shutil.copy2(tagged_plot_path, compat_plot_path)
+        except Exception as e:
+            print(f"  Could not copy compatibility plot: {e}")
+            compat_plot_path = ""
+
+    return {
+        "compat_output_folder": str(out_folder_compat),
+        "compat_nn_npy": str(compat_npy_path),
+        "compat_nn_csv": str(compat_csv_path),
+        "compat_plot": str(compat_plot_path),
+        "compat_per_cell_summary": str(compat_per_cell_summary_path),
+        "compat_run_settings": str(compat_settings_path),
+    }
+
+
+
 def analyze_count_file(count_file, skeleton_bundle):
     mrna = sanitize_name(infer_mrna_name(count_file))
     distance_tag = make_distance_range_tag()
 
+    # Traceable, distance-tagged output folder.
     out_folder = count_file.parent / f"random_{mrna}_output_{distance_tag}"
     out_folder.mkdir(parents=True, exist_ok=True)
+
+    # Standard output folder expected by script 8 and later downstream scripts.
+    # This is an alias for the active distance-range run.
+    out_folder_compat = count_file.parent / f"random_{mrna}_output"
 
     print(f"\nProcessing count table: {count_file}")
     print(f"  mRNA/channel name: {mrna}")
@@ -643,7 +758,9 @@ def analyze_count_file(count_file, skeleton_bundle):
     print(f"  Enforce nearest-skeleton range: {ENFORCE_NEAREST_SKELETON_RANGE}")
     print(f"  Shared Series skeleton folder: {skeleton_bundle['series_folder']}")
     print(f"  Valid shared skeleton txt files: {len(skeleton_bundle['valid_files'])}")
-    print(f"  Output folder: {out_folder}")
+    print(f"  Distance-tagged output folder: {out_folder}")
+    if WRITE_DOWNSTREAM_COMPATIBILITY_OUTPUTS:
+        print(f"  Downstream-compatible output folder: {out_folder_compat}")
 
     count_df = read_count_table(count_file)
     print(f"  Count rows: {len(count_df)}")
@@ -666,6 +783,7 @@ def analyze_count_file(count_file, skeleton_bundle):
             "generated_points": 0,
             "nn_distances": 0,
             "output_folder": str(out_folder),
+            "compat_output_folder": str(out_folder_compat) if WRITE_DOWNSTREAM_COMPATIBILITY_OUTPUTS else "",
         }
 
     all_nn = []
@@ -695,6 +813,7 @@ def analyze_count_file(count_file, skeleton_bundle):
                     "SkeletonFile": "",
                     "Status": "missing_shared_skeleton",
                     "RandomCoordinateFile": "",
+                    "DownstreamCompatibleRandomCoordinateFile": "",
                     "NNDistancesInCell": 0,
                 }
             )
@@ -716,9 +835,19 @@ def analyze_count_file(count_file, skeleton_bundle):
             random_csv = out_folder / f"{random_name}_random_{mrna}_{distance_tag}.csv"
             random_csv.parent.mkdir(parents=True, exist_ok=True)
 
-            pd.DataFrame(generated, columns=["x", "y", "z"]).to_csv(
-                random_csv, index=False
-            )
+            generated_df = pd.DataFrame(generated, columns=["x", "y", "z"])
+            generated_df.to_csv(random_csv, index=False)
+
+            compat_random_csv = ""
+
+            if (
+                WRITE_DOWNSTREAM_COMPATIBILITY_OUTPUTS
+                and WRITE_DOWNSTREAM_COMPATIBILITY_COORDINATES
+            ):
+                out_folder_compat.mkdir(parents=True, exist_ok=True)
+                compat_random_csv_path = out_folder_compat / f"{random_name}_random_{mrna}.csv"
+                generated_df.to_csv(compat_random_csv_path, index=False)
+                compat_random_csv = str(compat_random_csv_path)
 
             nn_count = 0
             if len(generated) > 1:
@@ -741,6 +870,7 @@ def analyze_count_file(count_file, skeleton_bundle):
                     "SkeletonFile": str(skeleton_path),
                     "Status": "processed",
                     "RandomCoordinateFile": str(random_csv),
+                    "DownstreamCompatibleRandomCoordinateFile": compat_random_csv,
                     "NNDistancesInCell": nn_count,
                 }
             )
@@ -763,6 +893,7 @@ def analyze_count_file(count_file, skeleton_bundle):
                     "SkeletonFile": str(skeleton_path),
                     "Status": f"error: {e}",
                     "RandomCoordinateFile": "",
+                    "DownstreamCompatibleRandomCoordinateFile": "",
                     "NNDistancesInCell": 0,
                 }
             )
@@ -813,9 +944,37 @@ def analyze_count_file(count_file, skeleton_bundle):
         )
         print("  No plot created because there were no NN distances.")
 
-    print(f"  Saved random NN npy: {npy_path}")
-    print(f"  Saved random NN csv: {csv_path}")
-    print(f"  Saved per-cell summary: {per_cell_summary_path}")
+    compat_paths = {
+        "compat_output_folder": "",
+        "compat_nn_npy": "",
+        "compat_nn_csv": "",
+        "compat_plot": "",
+        "compat_per_cell_summary": "",
+        "compat_run_settings": "",
+    }
+
+    if WRITE_DOWNSTREAM_COMPATIBILITY_OUTPUTS:
+        compat_paths = write_downstream_compatibility_outputs(
+            out_folder_compat=out_folder_compat,
+            mrna=mrna,
+            all_nn=all_nn,
+            per_cell_summary=per_cell_summary,
+            distance_tag=distance_tag,
+            tagged_npy_path=npy_path,
+            tagged_csv_path=csv_path,
+            tagged_per_cell_summary_path=per_cell_summary_path,
+            tagged_plot_path=plot_path,
+            has_plot=len(all_nn) > 0,
+        )
+
+    print(f"  Saved distance-tagged random NN npy: {npy_path}")
+    print(f"  Saved distance-tagged random NN csv: {csv_path}")
+    print(f"  Saved distance-tagged per-cell summary: {per_cell_summary_path}")
+
+    if WRITE_DOWNSTREAM_COMPATIBILITY_OUTPUTS:
+        print(f"  Saved downstream-compatible random NN npy: {compat_paths['compat_nn_npy']}")
+        print(f"  Saved downstream-compatible random NN csv: {compat_paths['compat_nn_csv']}")
+        print(f"  Saved downstream-compatible per-cell summary: {compat_paths['compat_per_cell_summary']}")
 
     return {
         "count_file": str(count_file),
@@ -836,6 +995,12 @@ def analyze_count_file(count_file, skeleton_bundle):
         "nn_npy": str(npy_path),
         "plot": str(plot_path) if len(all_nn) > 0 else "",
         "per_cell_summary": str(per_cell_summary_path),
+        "compat_output_folder": compat_paths["compat_output_folder"],
+        "compat_nn_csv": compat_paths["compat_nn_csv"],
+        "compat_nn_npy": compat_paths["compat_nn_npy"],
+        "compat_plot": compat_paths["compat_plot"],
+        "compat_per_cell_summary": compat_paths["compat_per_cell_summary"],
+        "compat_run_settings": compat_paths["compat_run_settings"],
     }
 
 
@@ -919,6 +1084,12 @@ def main():
                     "nn_npy": "",
                     "plot": "",
                     "per_cell_summary": "",
+                    "compat_output_folder": "",
+                    "compat_nn_csv": "",
+                    "compat_nn_npy": "",
+                    "compat_plot": "",
+                    "compat_per_cell_summary": "",
+                    "compat_run_settings": "",
                 }
             )
 
